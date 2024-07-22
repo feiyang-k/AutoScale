@@ -8,7 +8,7 @@
 
 **Abstract:** To ensure performance on a diverse set of downstream tasks, LLMs are pretrained via data mixtures over different domains. In this work, we demonstrate that the optimal data composition for a fixed compute budget varies depending on the scale of the training data, suggesting that the common practice of empirically determining an optimal composition using small-scale experiments will not yield the optimal data mixtures when scaling up to the final model. To address this challenge, we propose **AutoScale**, an automated tool that finds a compute-optimal data composition for training at any desired target scale. AutoScale first determines the optimal composition at a small scale using a novel bilevel optimization framework, **D**irect **D**ata **O**ptimization (**DDO**), and then fits a predictor to estimate the optimal composition at larger scales. The predictor's design is inspired by our theoretical analysis of scaling laws related to data composition, which could be of independent interest. In empirical studies with pre-training 774M Decoder-only LMs (GPT-2 Large) on RedPajama dataset, AutoScale decreases validation perplexity at least 25% faster than any baseline with up to 38% speed up compared to without reweighting, achieving the best overall performance across downstream tasks. On pre-training Encoder-only LMs (BERT) with masked language modeling, DDO is shown to decrease loss on all domains while visibly improving average task performance on GLUE benchmark by 8.7% and on large-scale QA dataset (SQuAD) by 5.9% compared with without reweighting. AutoScale speeds up training by up to 28%. Our codes are open-sourced.
 
-![Figure 1](Figure_1.png)
+![Figure 1](figures/Figure_1.png)
 **Figure 1.** Training 774M Decoder-only LMs for 10B tokens (96k steps). **AutoScale**-predicted domain weights decrease validation PPL at least $28\%$ faster than any baseline with up to $38\%$ speed up. LLaMA weights yield a much better training efficiency than uniform weights when scaling up.
 
 
@@ -24,7 +24,7 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 
 - We formalize the problem of finding compute-optimal data composition with domain reweighting as bi-level optimization. This allows for directly optimizing the final objective over data composition, circumventing most of the risks from heuristic designs. We propose a practical solution algorithm, **D**irect **D**ata **O**ptimization (**DDO**), for determining a compute-optimal training data composition for a given data scale by estimating and optimizing over the neural scaling law of the data sources. This provides a global approximation to this problem, which allows finding the global optimum in a *single step* with high precision, achieving consistent results and reliable performance improvements robust to different use cases.
   
-![Figure 3](Figure_3.png)
+![Figure 3](figures/Figure_3.png)
 **Figure 2.** Optimizing domain weights with **DDO** algorithm for pre-training Encoder-only LMs (*BERT*). **DDO** substantially reduces validation loss. After reweighting, all training domains' loss has either decreased or remained unchanged. Out-of-domain loss on non-training domains has also decreased considerably. Enhanced performance has been observed on all *GLUE* tasks and *SQuAD*.
 
 **Operational Pipeline:**
@@ -39,14 +39,14 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 - Enter the results for the experiments listed above;
 - Fit power law scaling functions and solve the optimization problem.
 
-![Figure 4](Figure_4.png)
+![Figure 4](figures/Figure_4.png)
 **Figure 3.** Fitting validation loss with power-law functions, directly approximating how loss changes with each domain's data quantity. Compared to *BERT* models trained with MLM (right), *GPT* models trained with CLM (left) demonstrate a much stronger response to domain reweighting. In final results, *GPT*/CLM achieved >2x speed-up margins relative to uniform weights compared to *BERT*/MLM.
 
 ### 2. AutoScale
 
 - We show that the shift in the optimal data composition with the scale of training complies with a simple function form and is empirically predictable. By fitting this pattern of shift at smaller scales, we are able to predict optimal data compositions at larger scales, automatically adjusting data composition for any training data scale and achieving beyond-neural scaling performance improvements on the target model. Correspondingly, we propose **AutoScale**, an automated tool that finds a compute-optimal data composition for training an LLM at the target scale. With optimal data compositions found at smaller scales, we fit the **AutoScale** predictor designed based on theoretical analysis with scaling laws and use it to determine optimal data composition at larger scales. Since one only needs to train models on small data scales where re-training is affordable, **AutoScale** *does not require using proxy models with a smaller parameter size, avoiding the transferability issue between domain weights optimized on different models*.
 
-![Figure 2](Figure_2.png)
+![Figure 2](figures/Figure_2.png)
 **Figure 4.** Optimizing domain weights with **DDO** algorithm for pre-training 774M Decoder-only LMs (*GPT-2 Large*). Optimal domain weights are dependent on the scale of training data. A consistent shift can be observed. Using domain weights optimized for a different scale yields sub-optimal results, failing to fully realize the benefits of domain reweighting.
 
 
@@ -61,7 +61,7 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 - Predict the next optimal training data composition as $\mathbf{N^{(3)\*}}=\mathbf{N^{(2)\*}}(\mathbf{N^{(1)\*}})^{-1}\mathbf{N^{(2)\*}}$, yielding optimal domain weights $w_i^{(3)\*}=N_i^{(3)\*}/N^{(3)}$ at new training data scale $N^{(3)}=\sum_i N_i^{(3)\*}$;
 - Repeat this process until the target training data scale is reached.
 
-![Figure 5](Figure_5.png)
+![Figure 5](figures/Figure_5.png)
 **Figure 5.** **AutoScale**-predicted domain weights for training 774M Decoder-only LMs. Optimal data quantity for each domain grows in exponential-style functions with training data scale (left) where data sources with diverse samples (e.g., *C4*) are unweighted relative to domains with standard format (e.g., *Wikipedia*).
 
 ## Additional Training Details
