@@ -53,12 +53,12 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 **Operational Pipeline:**
 
 **Stage 1, obtaining domain weights**
-- For two smaller training data scales $N^{(1)}$ and $N^{(2)}$ where re-training the model is affordable, find their corresponding optimal training data compositions $\mathbf{N^{(1)*}}$ and $\mathbf{N^{(2)*}}$ using **DDO** Algorithm described above.
+- For two smaller training data scales $N^{(1)}$ and $N^{(2)}$ where re-training the model is affordable, find their corresponding optimal training data compositions $\mathbf{N^{(1)\*}}$ and $\mathbf{N^{(2)*}}$ using **DDO** Algorithm described above.
 
 **Stage 2, prediction**
 *(interactive examples provided in /algorithms/AutoScale_example.ipynb)*
-- Enter the optimized domain weights $\mathbf{N^{(1)*}}$, $\mathbf{N^{(2)*}}$ from the experiments listed above;
-- Predict the next optimal training data composition as $\mathbf{N^{(3)*}}=\mathbf{N^{(2)*}}(\mathbf{N^{(1)*}})^{-1}\mathbf{N^{(2)*}}$, yielding optimal domain weights $w_i^{(3)*}=N_i^{(3)*}/N^{(3)}$ at new training data scale $N^{(3)}=\sum_i N_i^{(3)*}$;
+- Enter the optimized domain weights $\mathbf{N^{(1)\*}}$, $\mathbf{N^{(2)*}}$ from the experiments listed above;
+- Predict the next optimal training data composition as $\mathbf{N^{(3)\*}}=\mathbf{N^{(2)\*}}(\mathbf{N^{(1)\*}})^{-1}\mathbf{N^{(2)\*}}$, yielding optimal domain weights $w_i^{(3)\*}=N_i^{(3)\*}/N^{(3)}$ at new training data scale $N^{(3)}=\sum_i N_i^{(3)\*}$;
 - Repeat this process until the target training data scale is reached.
 
 ![Figure 5](Figure_5.png)
@@ -77,7 +77,7 @@ For training Decoder-only LMs, the **RedPajama** dataset is available at: https:
 - *Wikipedia*: A well-organized and meticulously curated dataset of encyclopedia articles, delivering a broad spectrum of knowledge across multiple disciplines. We only use English samples with 'en' in meta-data.
 - *StackExchange*: This domain captures a variety of user-generated content from discussions and question-answer sessions across numerous technical topics.
 
-Given copyright restrictions with the \texttt{Books} domain on Hugging Face, we have opted for an alternative source available at https://yknzhu.wixsite.com/mbweb.
+Given copyright restrictions with the *Books* domain on Hugging Face, we have opted for an alternative source available at https://yknzhu.wixsite.com/mbweb.
 For each domain, we ensure only samples with more than 1000 characters are retained. For each sample, we randomly extract a continuous block of 1000 characters. For the *Wikipedia* domain, we keep only those samples that are in English. Samples are selected without replacement. Additionally, for each domain, a held-out dataset comprising 10K samples is reserved to evaluate the perplexity of the pretrained model. 
 
 For training Encoder-only LMs, the 5 domains of training data utilized are listed as follows:
