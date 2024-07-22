@@ -19,6 +19,70 @@ Figure 1. Training 774M Decoder-only LMs for 10B tokens (96k steps). **AutoScale
 
 ![Figure 5](Figure_5.png)
 
+## Algorithms
+In this work, we propose a generic domain reweighting methodology for LLM pre-training to overcome these limitations. **Our efforts are two-fold:**
+
+### 1. DDO
+
+- We formalize the problem of finding compute-optimal data composition with domain reweighting as bi-level optimization. This allows for directly optimizing the final objective over data composition, circumventing most of the risks from heuristic designs. We propose a practical solution algorithm, **D**irect **D**ata **O**ptimization (**DDO**), for determining a compute-optimal training data composition for a given data scale by estimating and optimizing over the neural scaling law of the data sources. This provides a global approximation to this problem, which allows finding the global optimum in a *single step* with high precision, achieving consistent results and reliable performance improvements robust to different use cases (Figure \ref{fig:figure2}).
+
+**Operational Pipeline:**
+
+**Stage 1, model training**
+*(example training pipelines provided in /training/)*
+- Train a base proxy model with uniform weights (or reference weights, if available);
+- At each time, add/reduce data quantity for one domain and re-train the proxy model;
+
+**Stage 2, optimization**
+*(interactive examples provided in /algorithms/DDO_example.ipynb)*
+- Enter the results for the experiments listed above;
+- Fit power law scaling functions and solve the optimization problem.
+
+### 2. AutoScale
+
+- We show that the shift in the optimal data composition with the scale of training complies with a simple function form and is empirically predictable. By fitting this pattern of shift at smaller scales, we are able to predict optimal data compositions at larger scales, automatically adjusting data composition for any training data scale and achieving beyond-neural scaling performance improvements on the target model. Correspondingly, we propose **AutoScale**, an automated tool that finds a compute-optimal data composition for training an LLM at the target scale. With optimal data compositions found at smaller scales, we fit the **AutoScale** predictor designed based on theoretical analysis with scaling laws and use it to determine optimal data composition at larger scales. Since one only needs to train models on small data scales where re-training is affordable, **AutoScale** *does not require using proxy models with a smaller parameter size, avoiding the transferability issue between domain weights optimized on different models*.
+
+
+**Operational Pipeline:**
+
+**Stage 1, obtaining domain weights**
+- For two smaller training data scales $N^{(1)}$ and $N^{(2)}$ where re-training the model is affordable, find their corresponding optimal training data compositions $\mathbf{N^{(1)*}}$ and $\mathbf{N^{(2)*}}$ using **DDO** Algorithm described above.
+
+**Stage 2, prediction**
+*(interactive examples provided in /algorithms/AutoScale_example.ipynb)*
+- Enter the optimized domain weights $\mathbf{N^{(1)*}}$, $\mathbf{N^{(2)*}}$ from the experiments listed above;
+- Predict the next optimal training data composition as $\mathbf{N^{(3)*}}=\mathbf{N^{(2)*}}(\mathbf{N^{(1)*}})^{-1}\mathbf{N^{(2)*}}$, yielding optimal domain weights $w_i^{(3)*}=N_i^{(3)*}/N^{(3)}$ at new training data scale $N^{(3)}=\sum_i N_i^{(3)*}$;
+- Repeat this process until the target training data scale is reached.
+
+
+## Additional Training Details
+
+### Data
+
+For training Decoder-only LMs, the **RedPajama** dataset is available at: https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T. The 7 domains involved are characterized as follows: 
+- *Commoncrawl*: A vast repository of web-crawled data, providing a heterogeneous mix of internet text.
+- *C4*: The Colossal Clean Crawled Corpus, filtered to remove low-quality content, thus ensuring the reliability and cleanliness of the data.
+- *GitHub*: This domain includes a compilation of publicly available code repositories, offering a rich source of syntactic and semantic patterns inherent in programming languages.
+- *Books*: A collection of textual content from published books, providing diverse narrative styles and complex character developments.
+- *ArXiv*: Comprising scientific papers primarily from the fields of physics, mathematics, computer science, and quantitative biology, this domain offers high-quality, scholarly content.
+- *Wikipedia*: A well-organized and meticulously curated dataset of encyclopedia articles, delivering a broad spectrum of knowledge across multiple disciplines. We only use English samples with 'en' in meta-data.
+- *StackExchange*: This domain captures a variety of user-generated content from discussions and question-answer sessions across numerous technical topics.
+
+Given copyright restrictions with the \texttt{Books} domain on Hugging Face, we have opted for an alternative source available at https://yknzhu.wixsite.com/mbweb.
+For each domain, we ensure only samples with more than 1000 characters are retained. For each sample, we randomly extract a continuous block of 1000 characters. For the *Wikipedia* domain, we keep only those samples that are in English. Samples are selected without replacement. Additionally, for each domain, a held-out dataset comprising 10K samples is reserved to evaluate the perplexity of the pretrained model. 
+
+For training Encoder-only LMs, the 5 domains of training data utilized are listed as follows:
+- *Amazon Reviews*: A compilation of customer reviews from Amazon, widely utilized in sentiment analysis studies, available at: https://huggingface.co/datasets/amazon_us_reviews.
+- *Arxiv*: Comprises 1.7 million articles from arXiv, available at: https://www.tensorflow.org/datasets/catalog/scientific_papers.
+- *Books*: A corpus of 11,038 novels by unpublished authors across 16 genres, available at: https://yknzhu.wixsite.com/mbweb.
+- *Wikipedia*: Offers datasets extracted from Wikipedia in various languages, available at: https://www.tensorflow.org/datasets/catalog/wikipedia. We only use English samples with 'en' in meta-data.
+- *Open WebText Corpus (OWTC)*: A corpus of English web texts from Reddit posts, available at: https://skylion007.github.io/OpenWebTextCorpus/.
+3 held-out non-training domains used in the evaluation include:
+- *Pubmed*: Features 19,717 diabetes-related publications from the PubMed database, organized into three classes and linked by a network of 44,338 citations, available at: https://www.tensorflow.org/datasets/catalog/scientific_papers
+- *News*: Comprises a significant collection of news articles derived from \texttt{CommonCrawl}, specifically from 5000 news domains indexed by Google News, available at: https://github.com/rowanz/grover/blob/master/realnews/README.md
+- *GitHub*: A curated selection from the \texttt{RedPajama} dataset, this segment includes an array of open-source code projects, available at: https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T
+
+### Training
 
 **For experiments on Decoder-only LMs (GPT-2 Large):** Run
 1. prepare_raw_data.py
@@ -27,3 +91,7 @@ Figure 1. Training 774M Decoder-only LMs for 10B tokens (96k steps). **AutoScale
    
 **For experiments on Encoder-only LMs (BERT-base):** Run
 - Interactive example: simple_bert.ipynb
+
+## Acknowledgement
+
+## Citation
