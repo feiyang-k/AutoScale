@@ -49,7 +49,7 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 - We show that the shift in the optimal data composition with the scale of training complies with a simple function form and is empirically predictable. By fitting this pattern of shift at smaller scales, we are able to predict optimal data compositions at larger scales, automatically adjusting data composition for any training data scale and achieving beyond-neural scaling performance improvements on the target model. Correspondingly, we propose **AutoScale**, an automated tool that finds a compute-optimal data composition for training an LLM at the target scale. With optimal data compositions found at smaller scales, we fit the **AutoScale** predictor designed based on theoretical analysis with scaling laws and use it to determine optimal data composition at larger scales. Since one only needs to train models on small data scales where re-training is affordable, **AutoScale** *does not require using proxy models with a smaller parameter size, avoiding the transferability issue between domain weights optimized on different models*.
 
 ![Figure 2](figures/Figure_2.png)
-**Figure 4.** Optimizing domain weights with **DDO** algorithm for pre-training 774M Decoder-only LMs (*GPT-2 Large*). Optimal domain weights are dependent on the scale of training data. A consistent shift can be observed. Using domain weights optimized for a different scale yields sub-optimal results, failing to fully realize the benefits of domain reweighting.
+**Figure 5.** Optimizing domain weights with **DDO** algorithm for pre-training 774M Decoder-only LMs (*GPT-2 Large*). Optimal domain weights are dependent on the scale of training data. A consistent shift can be observed. Using domain weights optimized for a different scale yields sub-optimal results, failing to fully realize the benefits of domain reweighting.
 
 
 **Operational Pipeline:**
@@ -64,7 +64,7 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 - Repeat this process until the target training data scale is reached.
 
 ![Figure 5](figures/Figure_5.png)
-**Figure 5.** **AutoScale**-predicted domain weights for training 774M Decoder-only LMs. Optimal data quantity for each domain grows in exponential-style functions with training data scale (left) where data sources with diverse samples (e.g., *C4*) are unweighted relative to domains with standard format (e.g., *Wikipedia*).
+**Figure 6.** **AutoScale**-predicted domain weights for training 774M Decoder-only LMs. Optimal data quantity for each domain grows in exponential-style functions with training data scale (left) where data sources with diverse samples (e.g., *C4*) are unweighted relative to domains with standard format (e.g., *Wikipedia*).
 
 ## Additional Training Details
 
@@ -90,8 +90,8 @@ For training Encoder-only LMs, the 5 domains of training data utilized are liste
 - *Open WebText Corpus (OWTC)*: A corpus of English web texts from Reddit posts, available at: https://skylion007.github.io/OpenWebTextCorpus/.
 3 held-out non-training domains used in the evaluation include:
 - *Pubmed*: Features 19,717 diabetes-related publications from the PubMed database, organized into three classes and linked by a network of 44,338 citations, available at: https://www.tensorflow.org/datasets/catalog/scientific_papers
-- *News*: Comprises a significant collection of news articles derived from \texttt{CommonCrawl}, specifically from 5000 news domains indexed by Google News, available at: https://github.com/rowanz/grover/blob/master/realnews/README.md
-- *GitHub*: A curated selection from the \texttt{RedPajama} dataset, this segment includes an array of open-source code projects, available at: https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T
+- *News*: Comprises a significant collection of news articles derived from *CommonCrawl*, specifically from 5000 news domains indexed by Google News, available at: https://github.com/rowanz/grover/blob/master/realnews/README.md
+- *GitHub*: A curated selection from the *RedPajama*} dataset, this segment includes an array of open-source code projects, available at: https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T
 
 ### Training
 
