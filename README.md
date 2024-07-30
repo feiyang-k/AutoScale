@@ -107,7 +107,7 @@ For training Encoder-only LMs, the 5 domains of training data utilized are liste
 > This work is supported in part by the National Science Foundation under grants IIS-2312794, IIS2313130, OAC-2239622, Amazon-Virginia Tech Initiative in Efficient and Robust Machine Learning, AWS computational credits, and the Commonwealth Cyber Initiative. The authors are grateful for Ankit Battawar and Alix Delgado from AWS, whose dedicated help and support were crucial for securing computing resources and implementing empirical studies.
 
 ## Citation
-If you find the manuscript or the code repo helpful to your project, please consider adding the following citation
+If you find the manuscript and/or the code repo helpful to your project, please consider adding the following citation
 
 > Feiyang Kang, Yifan Sun, Bingbing Wen, Si Chen, Dawn Song, Rafid Mahmood, and Ruoxi Jia (2024). AutoScale: Automatic Prediction of Compute-optimal Data Composition for Training LLMs. *arXiv preprint arXiv:/2407.20177*.
 
