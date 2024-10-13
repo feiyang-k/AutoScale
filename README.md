@@ -55,12 +55,12 @@ In this work, we propose a generic domain reweighting methodology for LLM pre-tr
 **Operational Pipeline:**
 
 **Stage 1, obtaining domain weights**
-- For two smaller training data scales $N^{(1)}$ and $N^{(2)}$ where re-training the model is affordable, find their corresponding optimal training data compositions $\mathbf{N^{(1)\*}}$ and $\mathbf{N^{(2)*}}$ using **DDO** Algorithm described above.
+- For two smaller training data scales $N^{(1)}$ and $N^{(2)}$ where re-training the model is affordable, find their corresponding optimal training data compositions $\mathbf{N^{(1)\*}}$ and $\mathbf{N^{(2)\*}}$ using **DDO** Algorithm described above.
 
 **Stage 2, prediction**
 *(interactive examples provided in /algorithms/AutoScale_example.ipynb)*
 - Enter the optimized domain weights $\mathbf{N^{(1)\*}}$, $\mathbf{N^{(2)*}}$ from the experiments listed above;
-- Predict the next optimal training data composition as $\mathbf{N^{(3)\*}}=\mathbf{N^{(2)\*}}(\mathbf{N^{(1)\*}})^{-1}\mathbf{N^{(2)\*}}$, yielding optimal domain weights $w_i^{(3)\*}=N_i^{(3)\*}/N^{(3)}$ at new training data scale $N^{(3)}=\sum_i N_i^{(3)\*}$;
+- Predict the next optimal training data composition as $\mathbf{N^{(3)\*}}=\mathbf{N^{(2)\*}}(\mathbf{N^{(1)\*}})^{-1}\mathbf{N^{(2)\*}}$, yielding optimal domain weights $w\_i^{(3)\*}=N\_i^{(3)\*}/N^{(3)}$ at new training data scale $N^{(3)}=\sum\_i N\_i^{(3)\*}$;
 - Repeat this process until the target training data scale is reached.
 
 ![Figure 5](figures/Figure_5.png)
