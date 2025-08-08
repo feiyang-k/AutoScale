@@ -1,5 +1,5 @@
 #### Official Code Repository for 
-# AutoScale📈–Automatic Prediction of Compute-optimal Data Compositions for Training LLMs
+# AutoScale📈: Scale-Aware Data Mixing for Pre-Training LLMs
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2407.20177-00ff00.svg)](https://arxiv.org/abs/2407.20177)
@@ -109,6 +109,6 @@ For training Encoder-only LMs, the 5 domains of training data utilized are liste
 ## Citation
 If you find the manuscript and/or the code repo helpful to your project, please consider adding the following citation
 
-> Feiyang Kang, Yifan Sun, Bingbing Wen, Si Chen, Dawn Song, Rafid Mahmood, and Ruoxi Jia (2024). AutoScale: Automatic Prediction of Compute-optimal Data Composition for Training LLMs. *arXiv preprint arXiv:/2407.20177*.
+> Feiyang Kang*, Yifan Sun*, Bingbing Wen, Si Chen, Dawn Song, Rafid Mahmood, and Ruoxi Jia (2025). AutoScale: Scale-Aware Data Mixing for Pre-Training LLMs. *In Second Conference on Language Modeling (COLM 2025)*.
 
 The authors appreciate your support :)
